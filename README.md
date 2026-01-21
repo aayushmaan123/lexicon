@@ -1,6 +1,7 @@
 # Lexicon-AI
 
-AI-powered legal research platform built with Next.js 14, TypeScript, and modern AI technologies.
+AI-powered legal research platform
 
-## Status
-Phase 1: Initial scaffold in progress
+## Getting Started
+
+This repository is being set up. Please check back soon for updates.
