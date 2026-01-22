@@ -10,10 +10,10 @@
   ],
   "scripts": {
     "backend": "npm run dev --workspace=backend",
-    "frontend": "npm run dev --workspace=frontend",
+    "frontend": "PORT=3001 npm run dev --workspace=frontend",
     "build": "npm run build --workspaces",
     "lint": "npm run lint --workspaces",
-    "dev": "npm run backend & npm run frontend"
+    "dev": "echo 'Run backend and frontend in separate terminals: npm run backend && npm run frontend'"
   },
   "keywords": ["ai", "legal-tech", "research", "rag", "deepseek"],
   "author": "",

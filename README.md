@@ -91,7 +91,7 @@ shared/
 
 ```bash
 # Clone the repository
-git clone https://github.com/aayushmaan123/lexicon.git
+git clone <repository-url>
 cd lexicon
 
 # Install dependencies for all workspaces
@@ -107,11 +107,10 @@ npm run build --workspace=shared
 # Run backend only (port 3000)
 npm run backend
 
-# Run frontend only (port 3000)
+# Run frontend only (port 3001)
 npm run frontend
 
-# Run both (requires different ports - update config)
-npm run dev
+# Note: Run both commands in separate terminal windows
 ```
 
 ### Building
@@ -140,7 +139,7 @@ npm run lint --workspace=backend
 
 ### Health & Status
 
-- `GET /api/health/health` - Health check
+- `GET /api/health` - Health check
 - `GET /api/health/status` - Detailed status
 
 ### AI Agents (Stub Implementation)

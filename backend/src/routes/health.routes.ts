@@ -5,8 +5,9 @@ const router = Router();
 
 /**
  * Health check endpoint
+ * Mounted at /api/health/ so this becomes /api/health
  */
-router.get('/health', (_req: Request, res: Response) => {
+router.get('/', (_req: Request, res: Response) => {
   const response: ApiResponse = {
     success: true,
     data: {
