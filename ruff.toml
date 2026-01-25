@@ -23,25 +23,3 @@ ignore = [
 
 [tool.ruff.lint.isort]
 known-third-party = ["fastapi", "pydantic", "sqlalchemy"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-addopts = "-v --cov=lexicon --cov-report=html --cov-report=term-missing"
-asyncio_mode = "auto"
-
-[tool.coverage.run]
-source = ["lexicon"]
-omit = ["*/tests/*", "*/migrations/*"]
-
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "def __repr__",
-    "raise AssertionError",
-    "raise NotImplementedError",
-    "if __name__ == .__main__.:",
-    "if TYPE_CHECKING:",
-]
