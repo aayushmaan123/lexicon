@@ -1,6 +1,6 @@
 """Document domain entities for the Lexicon application."""
 
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 
@@ -35,7 +35,9 @@ class Document(BaseModel):
     file_size: int
     document_type: DocumentType
     status: DocumentStatus = DocumentStatus.PENDING
-    uploaded_at: datetime = Field(default_factory=datetime.utcnow)
+    uploaded_at: datetime = Field(
+        default_factory=lambda: datetime.now(UTC)
+    )
     processed_at: datetime | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
 
@@ -62,7 +64,9 @@ class ParsedDocument(BaseModel):
     sections: list[Section] = Field(default_factory=list)
     metadata: dict[str, Any] = Field(default_factory=dict)
     page_count: int | None = None
-    parsed_at: datetime = Field(default_factory=datetime.utcnow)
+    parsed_at: datetime = Field(
+        default_factory=lambda: datetime.now(UTC)
+    )
 
 
 class DocumentChunk(BaseModel):
