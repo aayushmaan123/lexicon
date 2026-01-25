@@ -64,6 +64,9 @@ class OpenAIProvider(LLMProvider):
     ) -> BaseModel:
         """Generate structured output conforming to a Pydantic model.
 
+        Note: Uses OpenAI's beta API for structured output parsing.
+        This feature may change when the API graduates to stable.
+
         Args:
             prompt: The input prompt text
             response_model: Pydantic model class for structured output
@@ -71,6 +74,10 @@ class OpenAIProvider(LLMProvider):
 
         Returns:
             Instance of response_model with generated data
+
+        Raises:
+            AttributeError: If beta API is not available
+            Exception: For other API errors
         """
         try:
             response = self.client.beta.chat.completions.parse(
@@ -81,6 +88,15 @@ class OpenAIProvider(LLMProvider):
             )
             return response.choices[0].message.parsed
 
+        except AttributeError as e:
+            logger.error(
+                "OpenAI beta API not available. "
+                "This may indicate an API version compatibility issue."
+            )
+            raise AttributeError(
+                "OpenAI structured output requires beta API access. "
+                "Please check your OpenAI client version."
+            ) from e
         except Exception as e:
             logger.error(f"OpenAI structured generation failed: {str(e)}")
             raise
