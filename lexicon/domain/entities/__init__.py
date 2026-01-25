@@ -18,8 +18,16 @@ from lexicon.domain.entities.document import (
     ParsedDocument,
     Section,
 )
+from lexicon.domain.entities.legal_research import (
+    CaseLaw,
+    QueryType,
+    ResearchQuery,
+    ResearchResult,
+    Statute,
+)
 
 __all__ = [
+    "CaseLaw",
     "Clause",
     "ClauseType",
     "Contract",
@@ -30,8 +38,12 @@ __all__ = [
     "ParsedDocument",
     "Party",
     "PartyType",
+    "QueryType",
+    "ResearchQuery",
+    "ResearchResult",
     "RiskAssessment",
     "RiskCategory",
     "RiskLevel",
     "Section",
+    "Statute",
 ]
