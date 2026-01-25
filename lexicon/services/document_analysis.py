@@ -20,6 +20,10 @@ from lexicon.shared.retry_handler.handler import RetryHandler
 
 logger = logging.getLogger(__name__)
 
+# Text truncation limits to stay within token limits
+MAX_TEXT_LENGTH_STANDARD = 8000  # For most analysis tasks
+MAX_TEXT_LENGTH_CLASSIFICATION = 6000  # For classification (shorter text needed)
+
 
 class PartiesAndDatesResponse(BaseModel):
     """Structured response model for parties and dates extraction."""
@@ -119,7 +123,9 @@ class DocumentAnalysisService:
         logger.debug("Generating document summary")
 
         try:
-            prompt = SUMMARIZE_DOCUMENT_PROMPT.format(text=text[:8000])
+            prompt = SUMMARIZE_DOCUMENT_PROMPT.format(
+                text=text[:MAX_TEXT_LENGTH_STANDARD]
+            )
 
             summary = self.retry_handler.execute_with_retry(
                 self.llm.generate,
@@ -149,7 +155,9 @@ class DocumentAnalysisService:
         logger.debug("Extracting key points")
 
         try:
-            prompt = EXTRACT_KEY_POINTS_PROMPT.format(text=text[:8000])
+            prompt = EXTRACT_KEY_POINTS_PROMPT.format(
+                text=text[:MAX_TEXT_LENGTH_STANDARD]
+            )
 
             response = self.retry_handler.execute_with_retry(
                 self.llm.generate,
@@ -188,7 +196,9 @@ class DocumentAnalysisService:
         logger.debug("Extracting parties and dates")
 
         try:
-            prompt = EXTRACT_PARTIES_PROMPT.format(text=text[:8000])
+            prompt = EXTRACT_PARTIES_PROMPT.format(
+                text=text[:MAX_TEXT_LENGTH_STANDARD]
+            )
 
             response = self.retry_handler.execute_with_retry(
                 self.llm.generate,
@@ -229,7 +239,9 @@ class DocumentAnalysisService:
         logger.debug("Classifying document type")
 
         try:
-            prompt = CLASSIFY_DOCUMENT_PROMPT.format(text=text[:6000])
+            prompt = CLASSIFY_DOCUMENT_PROMPT.format(
+                text=text[:MAX_TEXT_LENGTH_CLASSIFICATION]
+            )
 
             response = self.retry_handler.execute_with_retry(
                 self.llm.generate,
