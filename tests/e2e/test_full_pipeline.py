@@ -89,11 +89,11 @@ class TestFullPipeline:
     def test_complete_legal_research_pipeline(self, mock_openai_client):
         """Test complete legal research pipeline."""
         from datetime import datetime
-        from lexicon.domain.entities.legal_research import LegalQuery
+        from lexicon.domain.entities.legal_research import ResearchQuery
         from lexicon.services.legal_research import LegalResearchService, LegalResearchResponse
         
         # Step 1: Create research query
-        query = LegalQuery(
+        query = ResearchQuery(
             query_id="e2e-query-1",
             query_text="What are the elements of breach of contract?",
             jurisdiction="United States",

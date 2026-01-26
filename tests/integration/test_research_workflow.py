@@ -3,7 +3,7 @@
 import pytest
 from datetime import datetime
 
-from lexicon.domain.entities.legal_research import LegalQuery
+from lexicon.domain.entities.legal_research import ResearchQuery
 from lexicon.services.legal_research import LegalResearchService
 
 
@@ -72,7 +72,7 @@ class TestResearchWorkflow:
         """Test research workflow for jurisdiction-specific queries."""
         from lexicon.services.legal_research import LegalResearchResponse
         
-        query = LegalQuery(
+        query = ResearchQuery(
             query_id="query-ca",
             query_text="What are the statute of limitations for breach of contract in California?",
             jurisdiction="California",
@@ -202,7 +202,7 @@ class TestResearchWorkflow:
         """Test research workflow across different legal areas."""
         from lexicon.services.legal_research import LegalResearchResponse
         
-        query = LegalQuery(
+        query = ResearchQuery(
             query_id=f"query-{legal_area}",
             query_text=f"Question about {legal_area}",
             jurisdiction="United States",
@@ -228,7 +228,7 @@ class TestResearchWorkflow:
         """Test workflow with complex multi-part query."""
         from lexicon.services.legal_research import LegalResearchResponse
         
-        complex_query = LegalQuery(
+        complex_query = ResearchQuery(
             query_id="complex",
             query_text="""
             What are the requirements for enforcing a non-compete agreement in California,

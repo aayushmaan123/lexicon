@@ -162,11 +162,11 @@ class TestLegalResearchService:
     ])
     def test_research_query_handles_various_inputs(self, query_text, mock_openai_provider):
         """Test that research_query handles various query formats."""
-        from lexicon.domain.entities.legal_research import LegalQuery
+        from lexicon.domain.entities.legal_research import ResearchQuery
         from lexicon.services.legal_research import LegalResearchResponse
         from datetime import datetime
         
-        query = LegalQuery(
+        query = ResearchQuery(
             query_id="test",
             query_text=query_text,
             jurisdiction="US",
