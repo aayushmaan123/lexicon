@@ -2,14 +2,31 @@
 
 **AI-powered legal document analysis and research system**
 
-Lexicon is a comprehensive platform for legal professionals that combines advanced AI capabilities with traditional legal document processing. It provides intelligent analysis of legal documents, contract review, legal research, and document indexing using RAG (Retrieval-Augmented Generation).
+> ⚠️ **IMPORTANT DISCLAIMER**: Lexicon is a development toolkit for document analysis and AI-powered research. **All outputs are informational only and should not be considered legal advice.** This system operates only on documents you provide and does not access public legal databases.
+
+Lexicon is a Phase 1 foundation platform that provides AI-assisted document processing capabilities. It combines document parsing, LLM integration, and RAG (Retrieval-Augmented Generation) to help analyze legal documents.
 
 ## Features
 
-- 📄 **Document Analysis**: Comprehensive analysis of legal documents with summarization, key points extraction, and party identification
-- 📝 **Contract Review**: Intelligent contract review with risk assessment, clause extraction, and unusual clause detection
-- 🔍 **Legal Research**: RAG-based legal research with natural language queries and citation extraction
-- 📚 **Document Indexing**: Efficient document indexing for fast semantic search and retrieval
+- 📄 **Document Analysis**: AI-assisted analysis with summarization, key point extraction, and entity identification (informational outputs)
+- 📝 **Contract Review**: Best-effort clause extraction and risk identification (not a substitute for legal review)
+- 🔍 **Legal Research**: RAG-based search over your indexed documents only (no public case law databases)
+- 📚 **Document Indexing**: Semantic search using embeddings and vector storage
+
+## Phase 1 Scope & Limitations
+
+**What This System Does**:
+- Parses PDF and DOCX files
+- Extracts text and applies AI analysis
+- Indexes documents for semantic search
+- Provides best-effort AI outputs for informational purposes
+
+**What This System Does NOT Do**:
+- ❌ Access public legal databases (LexisNexis, Westlaw, PACER, etc.)
+- ❌ Provide legal advice or compliance guidance
+- ❌ Guarantee accuracy of citations or legal analysis
+- ❌ Validate jurisdiction-specific requirements
+- ❌ Replace professional legal review
 
 ## Installation
 
@@ -85,7 +102,7 @@ python -m lexicon analyze contract.pdf --save-to-file analysis.json
 
 ### Contract Review
 
-Perform comprehensive contract review with risk assessment:
+Perform AI-assisted contract analysis (informational only, not legal review):
 
 ```bash
 # Full contract review
@@ -100,26 +117,28 @@ python -m lexicon review contract.pdf --focus obligations
 python -m lexicon review contract.pdf --output-format json --save-to review.json
 ```
 
-**Output includes:**
+**Output includes (best-effort, informational only):**
 - Contract type and metadata
 - Parties and roles
-- Risk assessment (high/medium/low severity)
+- Risk assessment (high/medium/low severity) - *AI-generated, not legal opinion*
 - Clause extraction and analysis
 - Unusual clause detection
 - Key obligations
 
+> **Note**: Contract review outputs are AI-generated and informational only. Always consult qualified legal professionals for actual legal review.
+
 ### Legal Research
 
-Perform legal research using natural language queries:
+Search your indexed documents using natural language queries:
 
 ```bash
-# Basic research query
+# Basic research query (searches YOUR indexed documents only)
 python -m lexicon research "What are the elements of breach of contract?"
 
-# Specify jurisdiction
+# Specify jurisdiction filter (if metadata available)
 python -m lexicon research "Statute of limitations for personal injury" --jurisdiction California
 
-# Focus on specific document types
+# Focus on specific document types in your index
 python -m lexicon research "Fair use doctrine" --query-type case_law
 
 # Save results
@@ -130,10 +149,12 @@ python -m lexicon research "Negligence elements" --no-sources
 ```
 
 **Output includes:**
-- Comprehensive answer to your query
+- AI-generated answer based on your indexed documents
 - Confidence and relevance scores
-- Legal citations
+- Best-effort citations (not guaranteed accurate)
 - Source documents with relevance scores
+
+> **Important**: Legal research only searches documents you have indexed. This system does NOT access public legal databases (LexisNexis, Westlaw, PACER, etc.). Citations are best-effort and should be verified.
 
 ### Document Indexing
 

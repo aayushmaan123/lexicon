@@ -31,8 +31,13 @@ async def lifespan(app: FastAPI):
 # Initialize FastAPI application
 app = FastAPI(
     title="Lexicon API",
-    description="REST API for the Lexicon Legal AI Platform. Provides endpoints for document analysis, "
-    "contract review, legal research, and knowledge base management.",
+    description=(
+        "REST API for the Lexicon Legal AI Platform. Provides endpoints for document analysis, "
+        "contract review, legal research, and knowledge base management.\n\n"
+        "⚠️ **DISCLAIMER**: All outputs are informational only and should not be considered legal advice. "
+        "This system operates only on documents you provide and does not access public legal databases. "
+        "Always consult qualified legal professionals for actual legal matters."
+    ),
     version="1.0.0",
     lifespan=lifespan,
     docs_url="/docs",

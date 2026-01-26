@@ -96,13 +96,17 @@ def research_command(
     ] = True,
 ):
     """
-    Perform legal research using AI and RAG.
+    Perform AI-assisted research over your indexed documents.
 
-    Searches through indexed legal documents and provides:
-    - Comprehensive answer to your query
-    - Relevant citations
+    Searches through documents you have indexed and provides:
+    - AI-generated answer based on your documents
+    - Best-effort citations (not guaranteed accurate)
     - Source documents with relevance scores
     - Confidence and relevance metrics
+
+    ⚠️  IMPORTANT: Only searches documents you have indexed.
+    Does NOT access public legal databases (LexisNexis, Westlaw, PACER).
+    Outputs are informational only, not legal advice.
 
     Example:
         lexicon research "What are the elements of breach of contract?"

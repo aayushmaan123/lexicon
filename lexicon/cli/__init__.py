@@ -13,7 +13,11 @@ from lexicon.cli.review import review_command
 # Create main Typer app
 app = typer.Typer(
     name="lexicon",
-    help="Lexicon - AI-powered legal document analysis and research system",
+    help=(
+        "Lexicon - AI-powered document analysis toolkit.\n\n"
+        "⚠️  All outputs are informational only, not legal advice. "
+        "Consult qualified professionals for legal matters."
+    ),
     no_args_is_help=True,
     add_completion=False,
 )
@@ -40,10 +44,12 @@ def main(
     ] = False,
 ):
     """
-    Lexicon - AI-powered legal document analysis and research system.
+    Lexicon - AI-powered document analysis toolkit.
 
-    Provides intelligent analysis of legal documents, contract review,
-    legal research capabilities, and document indexing.
+    Provides AI-assisted document analysis, contract review, and research
+    over your indexed documents. All outputs are informational only.
+
+    ⚠️  DISCLAIMER: Not legal advice. Always consult qualified professionals.
     """
     pass
 

@@ -97,13 +97,17 @@ def review_command(
     ] = None,
 ):
     """
-    Review a contract using AI.
+    AI-assisted contract review (informational only).
 
-    Performs comprehensive contract review including:
-    - Risk assessment (legal, financial, operational)
-    - Clause extraction and analysis
+    Provides best-effort analysis including:
+    - Risk assessment (legal, financial, operational) - AI-generated
+    - Clause extraction and categorization
     - Unusual clause detection
     - Party and obligation identification
+
+    ⚠️  IMPORTANT: Contract review is informational only and not a
+    substitute for professional legal review. Always consult qualified
+    attorneys for actual legal matters.
 
     Example:
         lexicon review contract.pdf

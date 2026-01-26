@@ -1,5 +1,7 @@
 # Lexicon REST API Specification
 
+> ⚠️ **IMPORTANT DISCLAIMER**: This API provides AI-assisted document analysis for informational purposes only. All outputs should be verified by qualified professionals. This system does NOT access public legal databases and should not be used as a substitute for legal advice.
+
 ## Table of Contents
 
 - [Overview](#overview)
@@ -19,12 +21,14 @@
 
 ## Overview
 
-The Lexicon REST API provides programmatic access to all legal document analysis and research capabilities. The API follows REST principles and returns JSON responses.
+The Lexicon REST API provides programmatic access to document analysis and AI-assisted research capabilities. The API follows REST principles and returns JSON responses.
+
+> **Scope Note**: This API operates only on documents you upload and index. It does not access public legal databases (LexisNexis, Westlaw, PACER, etc.).
 
 **Key Features**:
-- Comprehensive document analysis
-- Contract review with risk assessment
-- RAG-based legal research
+- AI-assisted document analysis (informational outputs)
+- Contract review with best-effort risk assessment
+- RAG-based research over your indexed documents
 - Knowledge base management
 - Automatic API documentation (OpenAPI/Swagger)
 - Async request processing
