@@ -79,6 +79,7 @@ async def review_contract(
 
     # Create temporary file
     temp_file = None
+    temp_path = None
     try:
         # Save uploaded file to temporary location
         suffix = Path(file.filename).suffix
@@ -165,7 +166,7 @@ async def review_contract(
         ) from e
     finally:
         # Clean up temporary file
-        if temp_file and Path(temp_path).exists():
+        if temp_path and Path(temp_path).exists():
             try:
                 Path(temp_path).unlink()
             except Exception as e:
