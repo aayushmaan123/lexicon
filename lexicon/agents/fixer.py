@@ -10,6 +10,12 @@ from uuid import uuid4
 
 from lexicon.agents.base import Agent, AgentErrorType, AgentResult
 
+# Keywords for identifying fixable issues
+FIXABLE_KEYWORDS = ["missing", "incomplete", "not documented"]
+
+# Keywords for identifying issues requiring escalation
+ESCALATION_KEYWORDS = ["incompatible", "conflict", "critical", "security"]
+
 
 class FixerAgent(Agent):
     """
@@ -167,7 +173,9 @@ class FixerAgent(Agent):
         escalated_issues = self._identify_escalated_issues(error_issues, warning_issues)
 
         fixes_applied = []
-        attempts = 1  # For Phase 2.1, we assume single attempt
+        # NOTE: In Phase 2.1, we use a single attempt for simplicity.
+        # In Phase 2.2+, this will iterate up to max_attempts with actual fixes.
+        attempts = 1
 
         # For fixable issues, document the fixes that would be applied
         for issue_info in fixable_issues:
@@ -216,10 +224,7 @@ class FixerAgent(Agent):
             message = issue.get("message", "").lower()
 
             # Simple heuristic: missing/incomplete items are often fixable
-            if any(
-                keyword in message
-                for keyword in ["missing", "incomplete", "not documented"]
-            ):
+            if any(keyword in message for keyword in FIXABLE_KEYWORDS):
                 fixable.append(issue_info)
 
         return fixable
@@ -240,10 +245,7 @@ class FixerAgent(Agent):
             message = issue.get("message", "").lower()
 
             # Complex errors require escalation
-            if any(
-                keyword in message
-                for keyword in ["incompatible", "conflict", "critical", "security"]
-            ):
+            if any(keyword in message for keyword in ESCALATION_KEYWORDS):
                 escalated.append({
                     "check": issue_info["check_name"],
                     "issue": issue,

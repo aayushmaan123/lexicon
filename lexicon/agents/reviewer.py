@@ -10,6 +10,10 @@ from uuid import uuid4
 
 from lexicon.agents.base import Agent, AgentErrorType, AgentResult
 
+# File type constants
+FILE_TYPE_PYTHON_MODULE = "python_module"
+FILE_TYPE_TEST = "test"
+
 
 class ReviewerAgent(Agent):
     """
@@ -180,8 +184,8 @@ class ReviewerAgent(Agent):
         """Check if test files are present for source files."""
         issues = []
 
-        source_files = [f for f in generated_files if f.get("type") == "python_module"]
-        test_files = [f for f in generated_files if f.get("type") == "test"]
+        source_files = [f for f in generated_files if f.get("type") == FILE_TYPE_PYTHON_MODULE]
+        test_files = [f for f in generated_files if f.get("type") == FILE_TYPE_TEST]
 
         # Simple heuristic: should have at least one test file per source file
         if source_files and len(test_files) < len(source_files):

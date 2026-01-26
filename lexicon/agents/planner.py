@@ -98,6 +98,14 @@ class PlannerAgent(Agent):
         context = kwargs.get("context", {})
         
         # Validate inputs
+        if context and not isinstance(context, dict):
+            return self._create_error_result(
+                error_type=AgentErrorType.VALIDATION_ERROR,
+                message="context must be a dictionary",
+                context={"context_type": type(context).__name__},
+                recoverable=False,
+                suggested_action="Provide context as a dictionary",
+            )
         if not task_description:
             return self._create_error_result(
                 error_type=AgentErrorType.VALIDATION_ERROR,
