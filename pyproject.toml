@@ -29,6 +29,7 @@ python-multipart = "^0.0.9"
 tiktoken = "^0.6.0"
 httpx = "^0.26.0"
 rich = "^13.7.0"
+sentence-transformers = "^2.3.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
