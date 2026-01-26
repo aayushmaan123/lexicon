@@ -169,6 +169,8 @@ class PlannerAgent(Agent):
         
         # Simple heuristic decomposition
         # In Phase 2.2+, this will be replaced with LLM-based planning
+        # Phase 2.1: Always creates a single task as a placeholder
+        num_subtasks = 1
         subtasks = [
             Task(
                 id=f"task-{i+1}",
@@ -177,7 +179,7 @@ class PlannerAgent(Agent):
                 estimated_duration="30m",
                 risk_level="low",
             )
-            for i in range(1)  # Single task for now
+            for i in range(num_subtasks)
         ]
 
         return ExecutionPlan(

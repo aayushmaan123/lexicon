@@ -14,6 +14,9 @@ from lexicon.agents.base import Agent, AgentErrorType, AgentResult
 FILE_TYPE_PYTHON_MODULE = "python_module"
 FILE_TYPE_TEST = "test"
 
+# Pseudo-file identifiers for system-level checks
+CHECK_ID_TEST_COVERAGE = "test_coverage_check"
+
 
 class ReviewerAgent(Agent):
     """
@@ -190,7 +193,7 @@ class ReviewerAgent(Agent):
         # Simple heuristic: should have at least one test file per source file
         if source_files and len(test_files) < len(source_files):
             issues.append({
-                "file": "test_coverage",
+                "file": CHECK_ID_TEST_COVERAGE,
                 "severity": "warning",
                 "message": f"Test coverage may be incomplete: {len(test_files)} test files for {len(source_files)} source files",
             })
