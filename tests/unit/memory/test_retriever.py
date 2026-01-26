@@ -278,10 +278,11 @@ class TestMemoryRetriever:
         
         context = retriever.assemble_context(results, include_metadata=False)
         
-        # Should not have metadata headers
-        assert "[Source:" not in context or context == ""
+        # Metadata headers should not be present in the context
+        if context:  # If there's content
+            assert "[Source:" not in context, "Metadata headers should not be present without include_metadata"
         
-        # But should have content if results exist
+        # Should have content if results exist
         if results:
             # Content should be in there somewhere
             for result in results:

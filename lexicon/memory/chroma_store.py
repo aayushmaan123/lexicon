@@ -11,14 +11,44 @@ from chromadb.config import Settings
 from lexicon.memory.base import MemoryChunk, MemoryMetadata, MemoryStore, RetrievalResult
 
 
+# Module-level cache for embedding function
+_embedding_function_cache = None
+
+
 def _default_embedding_function():
-    """Create the default sentence-transformers embedding function."""
-    from sentence_transformers import SentenceTransformer
-    model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
-    return lambda texts: model.encode(texts if isinstance(texts, list) else [texts]).tolist()
+    """Create the default sentence-transformers embedding function.
+    
+    Uses module-level caching to avoid recreating the model.
+    """
+    global _embedding_function_cache
+    
+    if _embedding_function_cache is None:
+        from sentence_transformers import SentenceTransformer
+        model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+        _embedding_function_cache = lambda texts: model.encode(
+            texts if isinstance(texts, list) else [texts]
+        ).tolist()
+    
+    return _embedding_function_cache
 
 
 class ChromaMemoryStore(MemoryStore):
+    """ChromaDB implementation of the memory store.
+    
+    Features:
+    - Vector storage using ChromaDB
+    - Embeddings via sentence-transformers (all-MiniLM-L6-v2)
+    - Local disk persistence
+    - Metadata filtering
+    - Deduplication on write
+    
+    Attributes:
+        collection_name: Name of the ChromaDB collection
+        persist_directory: Directory for local persistence
+        DEDUPLICATION_THRESHOLD: Similarity threshold for detecting duplicates (0.95)
+    """
+    
+    DEDUPLICATION_THRESHOLD = 0.95  # Threshold for detecting duplicate content
     """ChromaDB implementation of the memory store.
     
     Features:
@@ -295,7 +325,9 @@ class ChromaMemoryStore(MemoryStore):
         embedding: list[float],
         metadata: MemoryMetadata,
     ) -> Optional[str]:
-        """Check if a similar chunk already exists (similarity >0.95).
+        """Check if a similar chunk already exists.
+        
+        Uses DEDUPLICATION_THRESHOLD (0.95) for similarity comparison.
         
         Returns:
             chunk_id if duplicate found, None otherwise
@@ -313,7 +345,7 @@ class ChromaMemoryStore(MemoryStore):
         distances = results["distances"][0] if results["distances"] else [1.0]
         similarity = 1.0 - distances[0]
         
-        if similarity > 0.95:
+        if similarity > self.DEDUPLICATION_THRESHOLD:
             return results["ids"][0][0]
         
         return None

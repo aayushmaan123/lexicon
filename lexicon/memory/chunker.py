@@ -5,6 +5,11 @@ import re
 from typing import Iterator
 
 
+# Minimum chunk sizes for filtering
+MIN_CODE_CHUNK_SIZE = 20  # Characters
+MIN_DOC_WORD_COUNT = 10   # Words
+
+
 def chunk_code(code: str, file_path: str = "", language: str = "python") -> Iterator[tuple[str, dict]]:
     """Chunk code at function or class level.
     
@@ -115,7 +120,7 @@ def _chunk_code_simple(code: str, file_path: str, language: str) -> Iterator[tup
     
     for i, chunk in enumerate(chunks):
         chunk = chunk.strip()
-        if len(chunk) > 20:  # Minimum chunk size (reduced from 50)
+        if len(chunk) > MIN_CODE_CHUNK_SIZE:
             metadata = {
                 "type": "code_block",
                 "file_path": file_path,
@@ -168,7 +173,7 @@ def _chunk_markdown(text: str) -> Iterator[tuple[str, dict]]:
             heading = match.group(2)
             
             # Emit previous chunk if it exists and is large enough
-            if current_chunk and word_count >= 10:  # Minimum 10 words (reduced for flexibility)
+            if current_chunk and word_count >= MIN_DOC_WORD_COUNT:
                 chunk_text = "\n".join(current_chunk)
                 metadata = {
                     "type": "documentation",
@@ -206,7 +211,7 @@ def _chunk_markdown(text: str) -> Iterator[tuple[str, dict]]:
                 word_count = len(current_heading.split())
     
     # Emit final chunk
-    if current_chunk and word_count >= 10:  # Minimum 10 words
+    if current_chunk and word_count >= MIN_DOC_WORD_COUNT:
         chunk_text = "\n".join(current_chunk)
         metadata = {
             "type": "documentation",

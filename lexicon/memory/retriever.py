@@ -303,8 +303,8 @@ class MemoryRetriever:
     def _are_similar_contents(self, content1: str, content2: str, threshold: float = 0.9) -> bool:
         """Check if two content strings are very similar.
         
-        Uses simple character-level similarity (Jaccard).
-        For production, could use more sophisticated methods.
+        Uses simple character-level similarity (Jaccard) with early termination.
+        For production, consider more sophisticated methods like MinHash.
         
         Args:
             content1: First content string
@@ -314,13 +314,18 @@ class MemoryRetriever:
         Returns:
             True if contents are similar
         """
-        # Simple length check first
+        # Early termination: length check
         len1, len2 = len(content1), len(content2)
-        if abs(len1 - len2) / max(len1, len2) > 0.2:
+        if abs(len1 - len2) / max(len1, len2, 1) > 0.2:
             # Lengths differ by >20%, likely not duplicates
             return False
         
+        # Early termination: exact match
+        if content1 == content2:
+            return True
+        
         # Character-level Jaccard similarity
+        # Note: For large content, consider using MinHash for better performance
         set1 = set(content1)
         set2 = set(content2)
         
