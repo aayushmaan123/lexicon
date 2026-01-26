@@ -1,0 +1,41 @@
+"""
+Pipeline module for PRD ingestion and task execution.
+
+This module provides the infrastructure to:
+1. Parse Product Requirements Documents (PRDs)
+2. Validate PRD structure and content
+3. Convert PRDs into executable tasks
+4. Execute tasks through the Coordinator
+
+PRDs are inputs, not control logic. They define what to build, not how to build it.
+"""
+
+from lexicon.pipeline.prd_models import (
+    PRD,
+    PRDMetadata,
+    PRDRequirement,
+    PRDTask,
+    PRDValidationResult,
+    RequirementPriority,
+    RequirementType,
+    TaskStatus,
+)
+from lexicon.pipeline.prd_parser import PRDParser
+from lexicon.pipeline.prd_pipeline import PRDPipeline
+from lexicon.pipeline.prd_processor import PRDProcessor
+from lexicon.pipeline.prd_validator import PRDValidator
+
+__all__ = [
+    "PRD",
+    "PRDMetadata",
+    "PRDRequirement",
+    "PRDTask",
+    "PRDValidationResult",
+    "RequirementPriority",
+    "RequirementType",
+    "TaskStatus",
+    "PRDParser",
+    "PRDPipeline",
+    "PRDProcessor",
+    "PRDValidator",
+]
