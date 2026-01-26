@@ -167,9 +167,10 @@ class PlannerAgent(Agent):
         """
         plan_id = str(uuid4())
         
-        # Simple heuristic decomposition
-        # In Phase 2.2+, this will be replaced with LLM-based planning
-        # Phase 2.1: Always creates a single task as a placeholder
+        # Phase 2.1 Simplified Implementation:
+        # Always creates a single task as a placeholder. The variable and loop
+        # structure are maintained for Phase 2.2+ when LLM-based planning will
+        # dynamically determine the number of subtasks based on complexity.
         num_subtasks = 1
         subtasks = [
             Task(

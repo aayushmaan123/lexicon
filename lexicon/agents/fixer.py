@@ -176,8 +176,10 @@ class FixerAgent(Agent):
         escalated_issues = self._identify_escalated_issues(error_issues, warning_issues)
 
         fixes_applied = []
-        # NOTE: In Phase 2.1, we use a single attempt for simplicity.
-        # In Phase 2.2+, this will iterate up to max_attempts with actual fixes.
+        # Phase 2.1 Simplified Implementation:
+        # Always uses 1 attempt with heuristic-based fixes. The max_attempts
+        # parameter is accepted for interface compatibility and will be fully
+        # utilized in Phase 2.2+ when iterative LLM-based fixing is implemented.
         attempts = 1
 
         # For fixable issues, document the fixes that would be applied
