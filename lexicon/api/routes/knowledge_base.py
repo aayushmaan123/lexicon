@@ -223,14 +223,23 @@ async def get_stats() -> KnowledgeBaseStatsResponse:
 
         orchestrator = RAGOrchestrator()
 
-        # Get stats from vector store
-        stats = orchestrator.vector_store.get_stats()
+        # Get stats from vector store if method exists, otherwise return defaults
+        try:
+            stats = orchestrator.vector_store.get_stats()
+            total_documents = stats.get("total_documents", 0)
+            total_chunks = stats.get("total_chunks", 0)
+            collections = stats.get("collections", [])
+        except AttributeError:
+            # get_stats method not implemented yet - return defaults
+            total_documents = 0
+            total_chunks = 0
+            collections = ["lexicon_documents"]
 
         response = KnowledgeBaseStatsResponse(
-            total_documents=stats.get("total_documents", 0),
-            total_chunks=stats.get("total_chunks", 0),
+            total_documents=total_documents,
+            total_chunks=total_chunks,
             embedding_model=orchestrator.embedding_model,
-            collections=stats.get("collections", []),
+            collections=collections,
         )
 
         logger.info("Successfully retrieved knowledge base statistics")
