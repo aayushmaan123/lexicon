@@ -54,6 +54,8 @@ class FixerAgent(Agent):
             review_report (Dict): Review report from ReviewerAgent
             build_result (Dict): Original build result
             max_attempts (int): Maximum fix attempts (default: 3)
+                               Note: Phase 2.1 uses single-attempt heuristics.
+                               This parameter will be fully utilized in Phase 2.2+.
 
         Returns:
             AgentResult with fixes_applied list or escalation notice
