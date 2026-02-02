@@ -20,6 +20,27 @@ from lexicon.pipeline.advanced_prd_models import AdvancedPRD, DecomposedTask
 from lexicon.pipeline.prd_decomposer import PRDDecomposer
 
 
+class DuplicateTaskIDError(ValueError):
+    """
+    Duplicate task IDs detected across PRDs.
+    
+    This error is raised when multiple PRDs contain tasks with the same ID,
+    which would lead to ambiguity and potential data loss during orchestration.
+    """
+    
+    def __init__(self, duplicates: Dict[str, List[str]]):
+        """
+        Args:
+            duplicates: Mapping from task_id to list of prd_ids where it appears
+        """
+        msg_parts = ["Duplicate task IDs detected:"]
+        for task_id, prd_ids in duplicates.items():
+            msg_parts.append(
+                f"  - Task '{task_id}' appears in PRDs: {', '.join(prd_ids)}"
+            )
+        super().__init__("\n".join(msg_parts))
+
+
 @dataclass
 class MultiPRDMetadata:
     """
@@ -160,7 +181,7 @@ class MultiPRDIntake:
             prd_id = self._generate_prd_id(prd, prd_index)
             
             # Normalize PRD to tasks
-            tasks = self._normalize_prd(prd)
+            tasks = self._normalize_prd(prd, prd_id)
             
             # Track statistics
             task_count_by_prd[prd_id] = len(tasks)
@@ -170,6 +191,13 @@ class MultiPRDIntake:
             
             # Add tasks and track sources
             for task in tasks:
+                # Check for task ID collisions across PRDs
+                if task.task_id in prd_sources:
+                    existing_prd_id = prd_sources[task.task_id]
+                    raise DuplicateTaskIDError({
+                        task.task_id: [existing_prd_id, prd_id]
+                    })
+                
                 all_tasks.append(task)
                 prd_sources[task.task_id] = prd_id
         
@@ -205,7 +233,9 @@ class MultiPRDIntake:
             return f"prd-{index}-{title_slug}"
         return f"prd-{index}"
     
-    def _normalize_prd(self, prd: Union[PRD, AdvancedPRD]) -> List[DecomposedTask]:
+    def _normalize_prd(
+        self, prd: Union[PRD, AdvancedPRD], prd_id: str
+    ) -> List[DecomposedTask]:
         """
         Normalize a PRD to DecomposedTask format.
         
@@ -213,6 +243,7 @@ class MultiPRDIntake:
         
         Args:
             prd: The PRD to normalize
+            prd_id: Unique identifier for this PRD
             
         Returns:
             List of DecomposedTask objects
@@ -226,11 +257,11 @@ class MultiPRDIntake:
         elif isinstance(prd, PRD):
             # Phase 2.4: Convert directly from requirements to DecomposedTask
             # (PRDProcessor has bugs, so we bypass it)
-            return self._convert_prd_to_decomposed(prd)
+            return self._convert_prd_to_decomposed(prd, prd_id)
         else:
             raise TypeError(f"Unsupported PRD type: {type(prd).__name__}")
     
-    def _convert_prd_to_decomposed(self, prd: PRD) -> List[DecomposedTask]:
+    def _convert_prd_to_decomposed(self, prd: PRD, prd_id: str) -> List[DecomposedTask]:
         """
         Convert Phase 2.4 PRD directly to DecomposedTask format.
         
@@ -239,16 +270,24 @@ class MultiPRDIntake:
         
         Args:
             prd: Phase 2.4 PRD
+            prd_id: Unique identifier for this PRD
             
         Returns:
             List of DecomposedTask objects
         """
-        import uuid
         decomposed_tasks = []
         
+        # Build mapping for internal dependencies
+        # This ensures that internal requirement IDs are correctly mapped to 
+        # the new deterministic task IDs.
+        req_id_to_task_id = {req.id: f"task-{prd_id}-{req.id}" for req in prd.requirements}
+        
         for req in prd.requirements:
-            # Generate deterministic task ID
-            task_id = f"task-{req.id}-{uuid.uuid4().hex[:8]}"
+            # Generate deterministic task ID using compound key
+            task_id = req_id_to_task_id[req.id]
+            
+            # Map dependencies: transform internal req IDs, preserve others
+            mapped_deps = [req_id_to_task_id.get(dep, dep) for dep in req.dependencies]
             
             # Build task description
             description = f"{req.description}\n\nPRD: {prd.metadata.title}\n"
@@ -262,7 +301,7 @@ class MultiPRDIntake:
                 task_id=task_id,
                 requirement_id=req.id,
                 description=description,
-                dependencies=req.dependencies.copy(),  # Preserve dependencies
+                dependencies=mapped_deps,  # Use mapped dependencies
                 is_optional=False,  # Phase 2.4 tasks are always required
                 priority=req.priority.value,  # Use priority from requirement
                 resources=[],  # Phase 2.4 doesn't track resources
