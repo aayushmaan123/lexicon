@@ -1,8 +1,14 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "lexicon"
 version = "0.1.0"
-description = "A lexicon management system"
+description = "AI-powered legal document analysis and research system"
 authors = ["aayushmaan123 <your_email@example.com>"]
+readme = "README.md"
+packages = [{include = "lexicon"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -22,7 +28,36 @@ python-docx = "^1.1.0"
 python-multipart = "^0.0.9"
 tiktoken = "^0.6.0"
 httpx = "^0.26.0"
+rich = "^13.7.0"
+sentence-transformers = "^2.3.0"
+
+[tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
 pytest-asyncio = "^0.23.5"
 pytest-cov = "^4.1.0"
 ruff = "^0.2.0"
+
+[tool.poetry.scripts]
+lexicon = "lexicon.cli:app"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --cov=lexicon --cov-report=html --cov-report=term-missing"
+asyncio_mode = "auto"
+
+[tool.coverage.run]
+source = ["lexicon"]
+omit = ["*/tests/*", "*/migrations/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == '__main__':",
+    "if TYPE_CHECKING:",
+]
